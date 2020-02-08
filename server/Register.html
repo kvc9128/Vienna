@@ -26,7 +26,7 @@
     </p>
         <div id="alpha">
             <div style="text-align: center">
-        <form action="{{ url_for('register') }}" method="post">
+        <form action="handle_register" method="post">
         Username:<br>
         <input type="text" name="username" >
         <br>
@@ -35,6 +35,9 @@
         <br>
         Password:<br>
         <input type="password" name="password" >
+        <br>
+        <input type="radio" name="Tutor_Register" value="Tutor" style="center"> Tutor<br>
+        <input type="radio" name="User_Register" value="User" style="center"> User<br>
         <br><br>
         <input onclick="window.location.href = 'Login.html';" type="submit" value="Let's Go!" />
         </form>
