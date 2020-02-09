@@ -1,5 +1,6 @@
 from flask import Flask, send_file, abort, request, redirect, url_for, render_template, make_response
 from flaskext.mysql import MySQL
+from flask_socketio import SocketIO
 import os
 import hashlib
 
@@ -14,6 +15,12 @@ app.config['MYSQL_DATABASE_HOST'] = '104.196.135.244'
 mysql = MySQL()
 mysql.init_app(app)
 
+socketio = SocketIO(app)
+
+# Ticket format: username, course, budget, duration
+tickets = []
+connectedTutors = {}
+
 
 def querySQL(query):
     cnx = mysql.get_db()
@@ -23,6 +30,13 @@ def querySQL(query):
     data = cursor.fetchone()
     cursor.close()
     return data
+
+
+def checkTutorConnected(username):
+    if username not in connectedTutors:
+        connectedTutors[username] = {}
+        connectedTutors[username]['declined'] = []
+        connectedTutors[username]['waiting'] = False
 
 
 @app.route('/')
@@ -48,18 +62,52 @@ def handle_login():
     email = request.form['email']
     passwordHash = hashlib.sha256(request.form['password'].encode()).hexdigest()
 
-    query = "SELECT username, pass_hash FROM users WHERE email='{}'".format(email)
+    query = "SELECT username, pass_hash, user_type FROM users WHERE email='{}'".format(email)
     SQLresponse = querySQL(query)
+    if SQLresponse is None:
+        return redirect(url_for('getpage', path='Login.html'))
     username = SQLresponse[0]
     checkHash = SQLresponse[1]
+    userType = SQLresponse[2]
 
     if checkHash == passwordHash:
-        resp = make_response(render_template("User.html"))
+        if userType == 'student':
+            path = 'Student.html'
+        else:
+            path = 'Tutor.html'
+
+        resp = make_response(redirect(url_for('getpage', path=path)))
         resp.set_cookie('email', email)
         resp.set_cookie('username', username)
         return resp
     else:
         return redirect(url_for('getpage', path='Login.html'))
+
+
+@app.route('/request_tutor', methods=['POST'])
+def request_tutor():
+    username = request.cookies.get('username')
+    course = request.form['subject']
+    budget = request.form['budget']
+    duration = request.form['duration']
+
+    tickets.append((username, course, budget, duration))
+    return redirect(url_for('getpage', path='Chat.html'))
+
+
+def tutorTicketFinder(username):
+    checkTutorConnected(username)
+    connectedTutors[username]['waiting'] = True
+
+    while connectedTutors[username]['waiting']:
+        for ticket in tickets:
+            if ticket not in connectedTutors[username]['declined']:
+                socketio.emit('TICKET', {'username': ticket[0], 'course': ticket[1], 'budget': ticket[2], 'duration': ticket[3]})
+
+
+@socketio.on('TUTOR')
+def tutor():
+    socketio.start_background_task(target=tutorTicketFinder)
 
 
 @app.route('/images/<image>')
@@ -71,7 +119,12 @@ def images(image):
 
 @app.route('/<path>')
 def getpage(path):
-    if path in ["Register.html", "Login.html", "Student.html"]:
+    if path in ["Register.html", "Login.html", "Student.html", "Tutor.html", "Chat.html"]:
+        print(tickets)
         return render_template(path)
     else:
         abort(404)
+
+
+if __name__ == "__main__":
+    socketio.run(app, debug=True)
