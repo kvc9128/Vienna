@@ -1,11 +1,11 @@
 <html>
 	<head>
-		<title>Tiger Tutor</title>
+		<title>User Home</title>
 		<style>
 			#grad1 {
-  					background-image: linear-gradient(#FF9900, #FF6600);
+  					background-image: linear-gradient(#FF0066, #FF9900);
   					min-width: 100%;
-  					min-height: 100%;	
+  					min-height: 100%;
 				}
 			#alpha {
 					margin: auto;
@@ -14,7 +14,7 @@
   					top: 55%;
   					-ms-transform: translateY(-50%);
   					transform: translateY(-50%);
-				}	
+				}
 			.button {
 					background-color: #FF3300
   					color: white;
@@ -30,16 +30,23 @@
 		<div id="grad1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<p style="font-size:50px; text-align: center"><br>
-			<img src ="Tiger_tutors.png" width="400" height="400">
+			<img src ="Tiger_tutors.png" width="200" height="200">
 		</p>
 		<div id="alpha">
 		<div style="text-align: center;">
-		<button class="button" onclick ="window.location.href = 'Register.html';">Register</button>
-			<br>
-			<br>
-			<br>
-			<br>
-		<button class="button" onclick ="window.location.href = 'Login.html';">Login</button>
+		<form action="request_tutor" method="post">
+        Course Number(Subject/Course):<br>
+        <input type="text" name="subject" >
+        <br>
+        Budget(range):<br>
+        <input type="text" name="budget">
+        <br>
+        Duration(minutes):<br>
+        <input type="text" name="duration" >
+        <br>
+        <br><br>
+        <input type="submit" value="Let's Go!" />
+        </form>
 		</div>
 		</div>
 		</div>
