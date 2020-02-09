@@ -18,7 +18,7 @@
 			.button {
 					background-color: #FF3300
   					color: white;
-					padding: 15px 32px;
+					padding: 5px 10px;
  					text-align: center;
 					display: inline-block;
 					font-size: 50px;
@@ -30,9 +30,12 @@
 		<div id="grad1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<p style="font-size:50px; text-align: center"><br>
-			<img src ="Images/Tiger_tutors.png" width="200" height="200">
+			<img src ="server/Images/Tiger_tutors.png" width="200" height="200">
 		</p>
 		<div id="alpha">
+			<div style="text-align: center;">
+			<button class = "button" onclick="Prompt()">Enter Response</button>
+			</div>
 		<div style="text-align: center;">
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
@@ -56,7 +59,15 @@
 				socket.emit('TUTOR', {'username':getCookie("username")});
 				socket.on('TICKET', function(data)
 				{
-					console.log(data);
+					writeToScreen('<span style="text-align: center;"> + data + </span>);
+				});
+				socket.on('TICKET_RESPONSE', function(data)
+				{
+					function Prompt()
+					{
+						var Response = prompt("Please enter your response exactly(Token no. ACCEPT/REJECT) eg. (1 ACCEPT)");
+					}
+					socket.emit
 				});
 			</script>
 		</div>
