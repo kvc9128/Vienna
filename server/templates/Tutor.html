@@ -36,6 +36,7 @@
 			<div style="text-align: center;">
 			<button class = "button" onclick="Prompt()">Enter Response</button>
 			</div>
+		<p id="output">Awaiting Tickets...</p>
 		<div style="text-align: center;">
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
@@ -62,7 +63,8 @@
 				{
 					var pre = document.createElement("p");
          			pre.style.wordWrap = "break-word";
-         			pre.innerHTML = message; output.appendChild(pre);
+         			pre.innerHTML = message;
+         			output.appendChild(pre);
 				}
 				socket.emit('TUTOR', {'username':getCookie("username")});
 				socket.on('TICKET', function(data)
