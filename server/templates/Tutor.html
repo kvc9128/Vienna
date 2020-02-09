@@ -43,11 +43,20 @@
 			<script type="text/javascript">
 				var socket = io.connect('http://' + document.domain + ':' + location.port);
 				var output;
+				var Response;
 				output = document.getElementById("output");
 				function Prompt()
 				{
 					var Response = prompt("Please enter your response exactly(Token no. ACCEPT/REJECT) eg. (1 ACCEPT)");
 					socket.emit(response);
+				}
+				function Prompt2()
+				{
+					prompt("Sorry, but this person has already found a tutor, Please try later...");
+				}
+				function Prompt3()
+				{
+					prompt("You will be redirected shortly....");
 				}
 				function getCookie(cname) {
   					var name = cname + "=";
@@ -79,9 +88,18 @@
 				});
 				socket.on('TICKET_RESPONSE', function(data)
 				{
-					Prompt()
+					Prompt();
+				});
+				socket.on('TICKET_TAKEN', function(data)
+				{
+					Prompt2();
+				});
+				socket.on('TICKET_ACCEPTED', function(data)
+				{
+					Prompt3();
 				});
 			</script>
+			<input onclick="window.location.href = 'Chat.html';" type="submit" value="Let's Go!" />
 		</div>
 		</div>
 		</div>
