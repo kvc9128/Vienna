@@ -44,6 +44,10 @@
 				var socket = io.connect('http://' + document.domain + ':' + location.port);
 				var output;
 				output = document.getElementById("output");
+				function Prompt()
+				{
+					var Response = prompt("Please enter your response exactly(Token no. ACCEPT/REJECT) eg. (1 ACCEPT)");
+				}
 				function getCookie(cname) {
   					var name = cname + "=";
   					var decodedCookie = decodeURIComponent(document.cookie);
@@ -74,11 +78,7 @@
 				});
 				socket.on('TICKET_RESPONSE', function(data)
 				{
-					function Prompt()
-					{
-						var Response = prompt("Please enter your response exactly(Token no. ACCEPT/REJECT) eg. (1 ACCEPT)");
-					}
-					socket.emit
+
 				});
 			</script>
 		</div>
