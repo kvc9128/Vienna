@@ -74,7 +74,7 @@
 				socket.on('TICKET', function(data)
 				{
 					console.log(data);
-					writeToScreen('<span style="text-align: center;">' + data['username'] + ' needs help with ' + data['course'] + ' for ' + data['budget'] + '$ for ' + data['duration'] + ' minutes.' + '</span>');
+					writeToScreen('<span style="text-align: center;">' + data['username'] + ' needs help with ' + data['course'] + ' for ' + data['budget'] + '$ for ' + data['duration'] + ' minutes. ' + '</span>');
 				});
 				socket.on('TICKET_RESPONSE', function(data)
 				{
