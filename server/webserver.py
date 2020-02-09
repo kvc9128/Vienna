@@ -3,6 +3,8 @@ from flaskext.mysql import MySQL
 from flask_socketio import SocketIO
 import os
 import hashlib
+import time
+import secrets
 
 app = Flask(__name__)
 
@@ -18,8 +20,9 @@ mysql.init_app(app)
 socketio = SocketIO(app)
 
 # Ticket format: username, course, budget, duration
-tickets = []
+tickets = {}
 connectedTutors = {}
+#connections =
 
 
 def querySQL(query):
@@ -35,7 +38,7 @@ def querySQL(query):
 def checkTutorConnected(username):
     if username not in connectedTutors:
         connectedTutors[username] = {}
-        connectedTutors[username]['declined'] = []
+        connectedTutors[username]['offered'] = []
         connectedTutors[username]['waiting'] = False
 
 
@@ -90,8 +93,11 @@ def request_tutor():
     course = request.form['subject']
     budget = request.form['budget']
     duration = request.form['duration']
+    token = secrets.token_hex()
+    while token in tickets:
+        token = secrets.token_hex()
 
-    tickets.append((username, course, budget, duration))
+    tickets[secrets.token_hex()] = (username, course, budget, duration)
     return redirect(url_for('getpage', path='Chat.html'))
 
 
@@ -101,13 +107,33 @@ def tutorTicketFinder(username):
 
     while connectedTutors[username]['waiting']:
         for ticket in tickets:
-            if ticket not in connectedTutors[username]['declined']:
-                socketio.emit('TICKET', {'username': ticket[0], 'course': ticket[1], 'budget': ticket[2], 'duration': ticket[3]})
+            if ticket not in connectedTutors[username]['offered']:
+                socketio.emit('TICKET', {'username': tickets[ticket][0], 'course': tickets[ticket][1], 'budget': tickets[ticket][2], 'duration': tickets[ticket][3], 'token': ticket})
+                connectedTutors[username]['offered'].append(ticket)
+        time.sleep(2)
 
 
 @socketio.on('TUTOR')
 def tutor(json):
     socketio.start_background_task(target=tutorTicketFinder, username=json['username'])
+
+
+@socketio.on('TICKET_RESPONSE')
+def ticket_response(json):
+    data = json['response'].split(" ")
+    if data[1] == "ACCEPT":
+        token = connectedTutors[data[2]]['offered'][int(data[0]) - 1]
+        if token in tickets:
+            tickets.pop(token)
+            socketio.emit('TICKET_ACCEPTED', {'token': token})
+        else:
+            socketio.emit('TICKET_TAKEN')
+
+
+@socketio.on('my event')
+def handle_custom_event(json, method=['GET', 'POST']):
+    print("got message")
+    socketio.emit('my response', json)
 
 
 @app.route('/Images/<image>')
@@ -120,7 +146,6 @@ def images(image):
 @app.route('/<path>')
 def getpage(path):
     if path in ["Register.html", "Login.html", "Student.html", "Tutor.html", "Chat.html"]:
-        print(tickets)
         return render_template(path)
     else:
         abort(404)
