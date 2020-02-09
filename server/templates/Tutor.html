@@ -34,7 +34,31 @@
 		</p>
 		<div id="alpha">
 		<div style="text-align: center;">
-
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+			<script type="text/javascript">
+				var socket = io.connect('http://' + document.domain + ':' + location.port);
+				function getCookie(cname) {
+  					var name = cname + "=";
+  					var decodedCookie = decodeURIComponent(document.cookie);
+  					var ca = decodedCookie.split(';');
+  					for(var i = 0; i <ca.length; i++) {
+    					var c = ca[i];
+    					while (c.charAt(0) == ' ') {
+      					c = c.substring(1);
+    						}
+    				if (c.indexOf(name) == 0) {
+      				return c.substring(name.length, c.length);
+    					}
+  					}
+  				return "";
+				}
+				socket.emit('TUTOR', {'username':getCookie("username")});
+				socket.on('TICKET', function(data)
+				{
+					console.log(data);
+				});
+			</script>
 		</div>
 		</div>
 		</div>
