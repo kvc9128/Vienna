@@ -87,3 +87,4 @@ lint/tmp/
 
 __pycache__/
 server/__pycache__/
+server/mysql.txt
