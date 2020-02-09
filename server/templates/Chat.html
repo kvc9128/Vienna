@@ -39,11 +39,19 @@
                 <input type="text" class="message" placeholder="Messages"/>
                 <input type="submit"/>
             </form>
+			<p id="output">Awaiting Response...</p>
 		    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 			<script type="text/javascript">
 			var socket = io.connect('http://' + document.domain + ':' + location.port);
-
+			var output;
+			function writeToScreen(message)
+				{
+					var pre = document.createElement("p");
+         			pre.style.wordWrap = "break-word";
+         			pre.innerHTML = message;
+         			output.appendChild(pre);
+				}
       		socket.on( 'connect', function() {
         		socket.emit( 'my event', {data: 'User Connected'} )
         		var form = $( 'form' ).on( 'submit', function( e )
@@ -56,7 +64,8 @@
         		} )
       		} )
       		socket.on( 'my response', function( msg ) {
-        	console.log( msg )
+        	console.log( msg );
+        	writeToScreen(msg);
         	if( typeof msg.user_name !== 'undefined' ) {
           	$( 'h3' ).remove()
           	$( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
