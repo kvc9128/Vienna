@@ -81,7 +81,7 @@
 				}
 			var name;
       		socket.on( 'connect', function(socket) {
-      			socket.join(getCookie('token'));
+      			socket.join('/' + getCookie('token'));
         		var form = $( 'form' ).on( 'submit', function( e )
         		{
           			e.preventDefault()
