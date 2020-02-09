@@ -106,15 +106,15 @@ def tutorTicketFinder(username):
 
 
 @socketio.on('TUTOR')
-def tutor():
-    socketio.start_background_task(target=tutorTicketFinder)
+def tutor(json):
+    socketio.start_background_task(target=tutorTicketFinder, username=json['username'])
 
 
-@app.route('/images/<image>')
+@app.route('/Images/<image>')
 def images(image):
-    if not os.path.isfile("images/" + image):
+    if not os.path.isfile("Images/" + image):
         abort(404)
-    return send_file("images/" + image, mimetype='image/gif')
+    return send_file("Images/" + image, mimetype='image/gif')
 
 
 @app.route('/<path>')
