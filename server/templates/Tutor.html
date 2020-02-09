@@ -34,7 +34,7 @@
 		</p>
 		<div id="alpha">
 			<div style="text-align: center;">
-			<button class = "button" onclick="Prompt()">Enter Response</button>
+			<button class = "button" onclick="Prompt()"></button>
 			</div>
 		<p id="output">Awaiting Tickets...</p>
 		<div style="text-align: center;">
@@ -74,7 +74,7 @@
 				socket.on('TICKET', function(data)
 				{
 					console.log(data);
-					writeToScreen('<span style="text-align: center;">' + data['username'] + ' needs help with ' + data['course'] + ' for ' + data['budget'] + '$ for ' + data['duration'] + ' minutes.' '</span>');
+					writeToScreen('<span style="text-align: center;">' + data['username'] + ' needs help with ' + data['course'] + ' for ' + data['budget'] + '$ for ' + data['duration'] + ' minutes.' + '</span>');
 				});
 				socket.on('TICKET_RESPONSE', function(data)
 				{
