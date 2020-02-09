@@ -60,7 +60,7 @@
 				socket.on('TICKET', function(data)
 				{
 					console.log(data);
-					writeToScreen('<span style="text-align: center;"> + data + </span>);
+					writeToScreen('<span style="text-align: center;">' + data + '</span>');
 				});
 				socket.on('TICKET_RESPONSE', function(data)
 				{
