@@ -1,4 +1,4 @@
-from flask import Flask, send_file, abort, request, redirect, url_for, render_template
+from flask import Flask, send_file, abort, request, redirect, url_for, render_template, make_response
 from flaskext.mysql import MySQL
 import os
 import hashlib
@@ -29,6 +29,7 @@ def querySQL(query):
 def index():
     return render_template("index.html")
 
+
 @app.route('/handle_register', methods=['POST'])
 def handle_register():
     username = request.form['username']
@@ -47,10 +48,18 @@ def handle_login():
     email = request.form['email']
     passwordHash = hashlib.sha256(request.form['password'].encode()).hexdigest()
 
-    query = "SELECT pass_hash FROM users WHERE email='{}'".format(email)
-    data = querySQL(query)
+    query = "SELECT username, pass_hash FROM users WHERE email='{}'".format(email)
+    SQLresponse = querySQL(query)
+    username = SQLresponse[0]
+    checkHash = SQLresponse[1]
 
-    return str(data[0] == passwordHash)
+    if checkHash == passwordHash:
+        resp = make_response(render_template("User.html"))
+        resp.set_cookie('email', email)
+        resp.set_cookie('username', username)
+        return resp
+    else:
+        return redirect(url_for('getpage', path='Login.html'))
 
 
 @app.route('/images/<image>')
