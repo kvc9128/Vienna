@@ -132,7 +132,6 @@ def ticket_response(json):
 
 @socketio.on('my event')
 def handle_custom_event(json, method=['GET', 'POST']):
-    print("got message")
     socketio.emit('my response', json)
 
 
@@ -152,4 +151,4 @@ def getpage(path):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0')
