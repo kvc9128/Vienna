@@ -47,6 +47,7 @@
 				function Prompt()
 				{
 					var Response = prompt("Please enter your response exactly(Token no. ACCEPT/REJECT) eg. (1 ACCEPT)");
+					socket.emit(response);
 				}
 				function getCookie(cname) {
   					var name = cname + "=";
@@ -78,7 +79,7 @@
 				});
 				socket.on('TICKET_RESPONSE', function(data)
 				{
-					socket.emit(response);
+					Prompt()
 				});
 			</script>
 		</div>
