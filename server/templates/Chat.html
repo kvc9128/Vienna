@@ -86,7 +86,7 @@
           			e.preventDefault()
           			let user_name = getCookie("username");
           			let user_input = $( 'input.message' ).val()
-          			socket.to(getCookie('token')).emit( 'my event', {user_name : user_name, message : user_input} )
+          			socket.emit( 'my event', {user_name : user_name, message : user_input} )
           			$( 'input.message' ).val( '' ).focus()
         		} )
       		} )
