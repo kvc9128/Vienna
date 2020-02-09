@@ -62,7 +62,7 @@ def images(image):
 
 @app.route('/<path>')
 def getpage(path):
-    if path in ["Register.html", "Login.html", "User.html"]:
+    if path in ["Register.html", "Login.html", "Student.html"]:
         return render_template(path)
     else:
         abort(404)
